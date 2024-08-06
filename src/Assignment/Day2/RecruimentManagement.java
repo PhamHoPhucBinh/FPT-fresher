@@ -1,30 +1,49 @@
 package Assignment.Day2;
 
-import Assignment.Day2.Model.Certificate;
-import Assignment.Day2.Model.Experience;
-import Assignment.Day2.Model.Fresher;
-import Assignment.Day2.Model.Intern;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 public class RecruimentManagement {
+    /*test add and update data
     public static void main(String[] args) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
-        Experience expCandidate = new Experience(1, "Bình", dateFormat.parse("23/10/1996"), "0123456789", "binh@gmail.com", 5, "Java Developer");
-        Fresher fresherCandidate = new Fresher(2, "Đạt", dateFormat.parse("02/02/2000"), "0987654321", "dat@gmail.com", dateFormat.parse("01/06/2023"), "Excellent", "FPT University");
-        Intern internCandidate = new Intern(3, "Vy", dateFormat.parse("03/03/2001"), "0111222333", "vy@gmail.com", "Computer Science", "5th", "FPT University");
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver"); // Load MySQL JDBC Driver
 
-        Certificate cert1 = new Certificate(1, "Java Certification", "A", dateFormat.parse("01/01/2023"));
-        Certificate cert2 = new Certificate(2, "AWS Cloud Certification", "B", dateFormat.parse("01/06/2022"));
+            CandidateDAO candidateDAO = new CandidateDAOImpl();
+            CandidateService candidateService = new CandidateService(candidateDAO);
 
-        expCandidate.addCertificate(cert1);
-        fresherCandidate.addCertificate(cert1);
-        expCandidate.addCertificate(cert2);
-        internCandidate.addCertificate(cert2);
+            // Test addCandidate
+            Experience newExperience = new Experience();
+            newExperience.setFullName("Binh");
+            newExperience.setBirthDay(new Date(1996 - 10 - 23));
+            newExperience.setPhone("0923695395");
+            newExperience.setEmail("binh@gmail.com");
+            newExperience.setExpInYear(4);
+            newExperience.setProSkill("Java Dev");
+            candidateService.addCandidate(newExperience);
 
-        System.out.println(expCandidate);
-        System.out.println(fresherCandidate);
-        System.out.println(internCandidate);
+            // Test updateCandidate
+            Experience updatedExperience = new Experience();
+            updatedExperience.setCandidateID(newExperience.getCandidateID()); // Ensure this is set to the correct ID
+            updatedExperience.setFullName("Updated Binh");
+            updatedExperience.setBirthDay(new java.sql.Date(1996 - 10 - 23));
+            updatedExperience.setExpInYear(5);
+            updatedExperience.setPhone("0931234567");
+            updatedExperience.setEmail("updated_binh@gmail.com");
+            updatedExperience.setProSkill("Senior Java Dev");
+            candidateService.updateCandidate(updatedExperience);
+            System.out.println("Updated candidate");
+
+            // Fetch and print all candidates to verify the update
+            List<Candidate> candidates = candidateService.getAllCandidates();
+            if (candidates == null) {
+                System.out.println("candidates list if null");
+            } else {
+                for (Candidate candidate : candidates) {
+                    System.out.println(candidate);
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
+
+     */
 }
