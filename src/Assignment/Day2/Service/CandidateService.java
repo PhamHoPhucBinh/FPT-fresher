@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class CandidateService {
-    private CandidateDAO candidateDAO;
+    private final CandidateDAO candidateDAO;
 
     public CandidateService(CandidateDAO candidateDAO) {
         this.candidateDAO = candidateDAO;
@@ -25,10 +25,6 @@ public class CandidateService {
         candidateDAO.deleteCandidateById(candidateID);
     }
 
-    public Candidate getCandidateById(int candidateID) {
-        return candidateDAO.getCandidateById(candidateID);
-    }
-
     public List<Candidate> getAllCandidates() {
         return candidateDAO.getAllCandidates();
     }
@@ -36,7 +32,9 @@ public class CandidateService {
     public void addCertificateToCandidate(int candidateID, int certificateID) {
         candidateDAO.addCertificateToCandidate(candidateID, certificateID);
     }
-
+    public static void displayTotalCandidates() {
+        System.out.println("Total number of candidates: " + Candidate.getCandidateCount());
+    }
 
 }
 

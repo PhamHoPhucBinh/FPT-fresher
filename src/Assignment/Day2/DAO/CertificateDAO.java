@@ -11,11 +11,8 @@ public interface CertificateDAO {
 
     void deleteCertificateById(int certificateID);
 
-    List<Certificate> getAllCertificate();
-
     Certificate getCertificateById(int certificateId);
 
     List<Certificate> getCertificatesByCandidateId(int candidateID);
     List<Certificate> getAllCertificates();
-    void addCertificateToCandidate(int candidateID, int certificateID);
 }

@@ -1,6 +1,5 @@
 package Assignment.Day2.DAO;
 
-import Assignment.Day2.DAO.CandidateDAO;
 import Assignment.Day2.Model.*;
 
 import java.sql.*;
@@ -22,6 +21,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         return DriverManager.getConnection(jdbcURL, username, password);
     }
 
+    // TODO: 8/7/2024 add candidate function
     @Override
     public void addCandidate(Candidate candidate) {
         String sql = "SELECT * FROM candidates WHERE 1=0"; // Empty result set
@@ -57,11 +57,6 @@ public class CandidateDAOImpl implements CandidateDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public Candidate getCandidateById(int candidateID) {
-        return null;
     }
 
     private int getLastInsertedCandidateID(Connection connection) throws SQLException {
@@ -138,98 +133,6 @@ public class CandidateDAOImpl implements CandidateDAO {
             resultSet.moveToCurrentRow();
         }
     }
-
-//    @Override
-//    public void updateCandidate(Candidate candidate) {
-//        try (Connection connection = getConnection()) {
-//            if (candidate instanceof Experience) {
-//                updateExperience(connection, (Experience) candidate);
-//            } else if (candidate instanceof Fresher) {
-//                updateFresher(connection, (Fresher) candidate);
-//            } else if (candidate instanceof Intern) {
-//                updateIntern(connection, (Intern) candidate);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    private void updateExperience(Connection connection, Experience experience) throws SQLException {
-//        String sql = "SELECT * FROM candidates WHERE candidateID = " + experience.getCandidateID();
-//        try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-//             ResultSet resultSet = statement.executeQuery(sql)) {
-//
-//            if (resultSet.next()) {
-//                resultSet.updateString("fullName", experience.getFullName());
-//                resultSet.updateDate("birthDay", new java.sql.Date(experience.getBirthDay().getTime()));
-//                resultSet.updateString("phone", experience.getPhone());
-//                resultSet.updateString("email", experience.getEmail());
-//                resultSet.updateInt("candidateType", experience.getCandidateType());
-//                resultSet.updateRow();
-//            }
-//
-//            String expSql = "SELECT * FROM experience WHERE candidateID = " + experience.getCandidateID();
-//            try (ResultSet expResultSet = statement.executeQuery(expSql)) {
-//                if (expResultSet.next()) {
-//                    expResultSet.updateInt("ExpInYear", experience.getExpInYear());
-//                    expResultSet.updateString("proSkill", experience.getProSkill());
-//                    expResultSet.updateRow();
-//                }
-//            }
-//        }
-//    }
-//
-//    private void updateFresher(Connection connection, Fresher fresher) throws SQLException {
-//        String sql = "SELECT * FROM candidates WHERE candidateID = " + fresher.getCandidateID();
-//        try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-//             ResultSet resultSet = statement.executeQuery(sql)) {
-//
-//            if (resultSet.next()) {
-//                resultSet.updateString("fullName", fresher.getFullName());
-//                resultSet.updateDate("birthDay", new java.sql.Date(fresher.getBirthDay().getTime()));
-//                resultSet.updateString("phone", fresher.getPhone());
-//                resultSet.updateString("email", fresher.getEmail());
-//                resultSet.updateInt("candidateType", fresher.getCandidateType());
-//                resultSet.updateRow();
-//            }
-//
-//            String fresherSql = "SELECT * FROM fresher WHERE candidateID = " + fresher.getCandidateID();
-//            try (ResultSet fresherResultSet = statement.executeQuery(fresherSql)) {
-//                if (fresherResultSet.next()) {
-//                    fresherResultSet.updateDate("graduationDate", new java.sql.Date(fresher.getGraduationDate().getTime()));
-//                    fresherResultSet.updateString("graduationRank", fresher.getGraduationRank());
-//                    fresherResultSet.updateString("education", fresher.getEducation());
-//                    fresherResultSet.updateRow();
-//                }
-//            }
-//        }
-//    }
-//
-//    private void updateIntern(Connection connection, Intern intern) throws SQLException {
-//        String sql = "SELECT * FROM candidates WHERE candidateID = " + intern.getCandidateID();
-//        try (Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-//             ResultSet resultSet = statement.executeQuery(sql)) {
-//
-//            if (resultSet.next()) {
-//                resultSet.updateString("fullName", intern.getFullName());
-//                resultSet.updateDate("birthDay", new java.sql.Date(intern.getBirthDay().getTime()));
-//                resultSet.updateString("phone", intern.getPhone());
-//                resultSet.updateString("email", intern.getEmail());
-//                resultSet.updateInt("candidateType", intern.getCandidateType());
-//                resultSet.updateRow();
-//            }
-//
-//            String internSql = "SELECT * FROM intern WHERE candidateID = " + intern.getCandidateID();
-//            try (ResultSet internResultSet = statement.executeQuery(internSql)) {
-//                if (internResultSet.next()) {
-//                    internResultSet.updateString("majors", intern.getMajors());
-//                    internResultSet.updateString("semester", intern.getSemester());
-//                    internResultSet.updateString("universityName", intern.getUniversityName());
-//                    internResultSet.updateRow();
-//                }
-//            }
-//        }
-//    }
 
 
     //TODO: 8/7/2024 UPDATE FUCNTION
@@ -424,7 +327,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
     }
 
-
+    // TODO: 8/7/2024 Get all Candidates Function
     @Override
     public List<Candidate> getAllCandidates() {
         List<Candidate> candidates = new ArrayList<>();
@@ -551,6 +454,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         return intern;
     }
 
+    // TODO: 8/7/2024 gắn certificate vào candidates
     @Override
     public void addCertificateToCandidate(int candidateID, int certificateID) {
         String query = "INSERT INTO candidate_certificates (candidateID, certificateID) VALUES (?, ?)";
@@ -562,5 +466,11 @@ public class CandidateDAOImpl implements CandidateDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    // TODO: 8/7/2024 get candidate by ID
+    @Override
+    public Candidate getCandidateById(int candidateID) {
+        return null;
     }
 }

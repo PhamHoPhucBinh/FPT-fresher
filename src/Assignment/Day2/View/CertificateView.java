@@ -4,6 +4,7 @@ import Assignment.Day2.DAO.CertificateDAOImpl;
 import Assignment.Day2.Model.*;
 import Assignment.Day2.Service.CertificateService;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,10 +61,29 @@ public class CertificateView {
     }
 
     private static void updateCertificate(Scanner scanner, CertificateService certificateService) {
-        // Implement the logic for updating a certificate
+        try {
+            System.out.print("Enter certificate ID to update: ");
+            int certificateID = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            System.out.print("Enter Certificate Name: ");
+            String certificateName = scanner.nextLine();
+            System.out.print("Enter Enter Certificate Date (dd-mm-yyyy): ");
+            String certificateDateString = scanner.nextLine();
+            Date certificateDate = new SimpleDateFormat("dd-mm-yyyy").parse(certificateDateString);
+            System.out.print("Enter Certificate rank: ");
+            String certificateRank = scanner.nextLine();
+            Certificate certificate = new Certificate(certificateID, certificateName, certificateRank, certificateDate);
+            certificateService.updateCertificate(certificate);
+            System.out.println("Create Certificate successfully");
+        } catch (ParseException e) {
+            System.out.println("Invalid date format.");
+        }
     }
 
     private static void deleteCertificate(Scanner scanner, CertificateService certificateService) {
-        // Implement the logic for deleting a certificate
+        System.out.print("Enter Candidate ID to delete: ");
+        int certificateID = scanner.nextInt();
+        certificateService.deleteCertificateById(certificateID);
+        System.out.println("Candidate deleted successfully.");
     }
 }

@@ -41,19 +41,31 @@ public class CertificateDAOImpl implements CertificateDAO {
 
     @Override
     public void updateCertificate(Certificate certificate) {
-
+        String query = "UPDATE certificates SET certificateName = ?, certificateRank = ?, certificateDate = ? WHERE certificateID = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, certificate.getCertificateName());
+            preparedStatement.setString(2, certificate.getCertificateRank());
+            preparedStatement.setDate(3, new java.sql.Date(certificate.getCertificateDate().getTime()));
+            preparedStatement.setInt(4, certificate.getCertificateID());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void deleteCertificateById(int certificateID) {
-
+        String query = "DELETE FROM certificates WHERE certificateID = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, certificateID);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-
-    @Override
-    public List<Certificate> getAllCertificate() {
-        return null;
-    }
 
     @Override
     public Certificate getCertificateById(int certificateId) {
@@ -99,16 +111,4 @@ public class CertificateDAOImpl implements CertificateDAO {
         return -1;
     }
 
-
-    public void addCertificateToCandidate(int candidateID, int certificateID) {
-        String query = "UPDATE certificates SET candidateID = ? WHERE certificateID = ?";
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, candidateID);
-            preparedStatement.setInt(2, certificateID);
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }
