@@ -26,7 +26,15 @@ public abstract class Candidate {
         this.candidateType = candidateType;
         candidateCount++;
     }
-//    public abstract void showInfo();
+    public Candidate( String fullName, Date birthDay, String phone, String email, int candidateType) {
+        this.fullName = fullName;
+        this.birthDay = birthDay;
+        this.phone = phone;
+        this.email = email;
+        this.candidateType = candidateType;
+        candidateCount++;
+    }
+
 
     public void addCertificate(Certificate certificate) {
         certificates.add(certificate);

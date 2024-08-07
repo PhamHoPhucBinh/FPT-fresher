@@ -16,5 +16,6 @@ public interface CertificateDAO {
     Certificate getCertificateById(int certificateId);
 
     List<Certificate> getCertificatesByCandidateId(int candidateID);
-
+    List<Certificate> getAllCertificates();
+    void addCertificateToCandidate(int candidateID, int certificateID);
 }

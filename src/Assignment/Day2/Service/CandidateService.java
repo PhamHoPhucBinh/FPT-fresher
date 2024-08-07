@@ -3,6 +3,7 @@ package Assignment.Day2.Service;
 import Assignment.Day2.DAO.CandidateDAO;
 import Assignment.Day2.Model.Candidate;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class CandidateService {
@@ -16,6 +17,14 @@ public class CandidateService {
         candidateDAO.addCandidate(candidate);
     }
 
+    public void updateCandidate(Candidate candidate) throws SQLException {
+        candidateDAO.updateCandidate(candidate);
+    }
+
+    public void deleteCandidateById(int candidateID) throws SQLException {
+        candidateDAO.deleteCandidateById(candidateID);
+    }
+
     public Candidate getCandidateById(int candidateID) {
         return candidateDAO.getCandidateById(candidateID);
     }
@@ -24,12 +33,10 @@ public class CandidateService {
         return candidateDAO.getAllCandidates();
     }
 
-    public void updateCandidate(Candidate candidate) {
-        candidateDAO.updateCandidate(candidate);
+    public void addCertificateToCandidate(int candidateID, int certificateID) {
+        candidateDAO.addCertificateToCandidate(candidateID, certificateID);
     }
 
-//    public void deleteCandidate(int candidateID) {
-//        candidateDAO.deleteCandidate(candidateID);
-//    }
+
 }
 

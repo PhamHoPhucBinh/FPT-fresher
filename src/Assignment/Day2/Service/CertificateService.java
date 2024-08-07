@@ -31,4 +31,7 @@ public class CertificateService {
     public List<Certificate> getCertificatesByCandidateId(int candidateID) {
         return certificateDAO.getCertificatesByCandidateId(candidateID);
     }
+    public List<Certificate> getAllCertificates(){
+        return certificateDAO.getAllCertificates();
+    }
 }

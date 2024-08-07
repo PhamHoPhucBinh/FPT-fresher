@@ -13,7 +13,33 @@ public class Intern extends Candidate {
         this.semester = semester;
         this.universityName = universityName;
     }
+    public Intern( String fullName, Date birthDay, String phone, String email, String majors, String semester, String universityName) {
+        super( fullName, birthDay, phone, email, 2);
+        this.majors = majors;
+        this.semester = semester;
+        this.universityName = universityName;
+    }
     public Intern(){};
+
+    public Intern(String majors, String semester, String universityName) {
+        this.majors = majors;
+        this.semester = semester;
+        this.universityName = universityName;
+    }
+
+    public Intern(int candidateID, String fullName, Date birthDay, String phone, String email, int candidateType, String majors, String semester, String universityName) {
+        super(candidateID, fullName, birthDay, phone, email, candidateType);
+        this.majors = majors;
+        this.semester = semester;
+        this.universityName = universityName;
+    }
+
+    public Intern(String fullName, Date birthDay, String phone, String email, int candidateType, String majors, String semester, String universityName) {
+        super(fullName, birthDay, phone, email, candidateType);
+        this.majors = majors;
+        this.semester = semester;
+        this.universityName = universityName;
+    }
 
     public String getMajors() {
         return majors;

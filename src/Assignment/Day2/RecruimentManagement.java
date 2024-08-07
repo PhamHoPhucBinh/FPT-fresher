@@ -1,5 +1,16 @@
 package Assignment.Day2;
 
+import Assignment.Day2.DAO.CandidateDAO;
+import Assignment.Day2.DAO.CandidateDAOImpl;
+import Assignment.Day2.DAO.CertificateDAO;
+import Assignment.Day2.DAO.CertificateDAOImpl;
+import Assignment.Day2.Service.CandidateService;
+import Assignment.Day2.Service.CertificateService;
+import Assignment.Day2.View.ApplyCertificateView;
+import Assignment.Day2.View.HomeView;
+
+import java.sql.SQLException;
+
 public class RecruimentManagement {
     /*test add and update data
     public static void main(String[] args) throws ParseException {
@@ -46,4 +57,25 @@ public class RecruimentManagement {
     }
 
      */
+    public static void main(String[] args) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver"); // Load MySQL JDBC Driver
+
+            CandidateDAO candidateDAO = new CandidateDAOImpl();
+            CandidateService candidateService = new CandidateService(candidateDAO);
+
+            CertificateDAO certificateDAO = new CertificateDAOImpl();
+            CertificateService certificateService = new CertificateService(certificateDAO);
+
+            ApplyCertificateView applyCertificateView = new ApplyCertificateView(candidateService, certificateService);
+
+
+            HomeView homeView = new HomeView(candidateService, certificateService, applyCertificateView);
+            homeView.showMenu();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

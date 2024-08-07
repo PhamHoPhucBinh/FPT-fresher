@@ -10,11 +10,31 @@ public class Experience extends Candidate{
         super(candidateID, fullName, birthDay, phone, email, 0);
         this.expInYear = expInYear;
         this.proSkill = proSkill;
-        //this.candidateType = 0;
+    }
+    public Experience( String fullName, Date birthDay, String phone, String email, int expInYear, String proSkill) {
+        super(fullName, birthDay, phone, email, 0);
+        this.expInYear = expInYear;
+        this.proSkill = proSkill;
+    }
+
+    public Experience(int expInYear, String proSkill) {
+        this.expInYear = expInYear;
+        this.proSkill = proSkill;
+    }
+
+    public Experience(int candidateID, String fullName, Date birthDay, String phone, String email, int candidateType, int expInYear, String proSkill) {
+        super(candidateID, fullName, birthDay, phone, email, candidateType);
+        this.expInYear = expInYear;
+        this.proSkill = proSkill;
+    }
+
+    public Experience(String fullName, Date birthDay, String phone, String email, int candidateType, int expInYear, String proSkill) {
+        super(fullName, birthDay, phone, email, candidateType);
+        this.expInYear = expInYear;
+        this.proSkill = proSkill;
     }
 
     public Experience() {
-
     }
 
     @Override

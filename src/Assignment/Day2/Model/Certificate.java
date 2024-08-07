@@ -17,6 +17,11 @@ public class Certificate {
         this.certificateRank = certificateRank;
         this.certificateDate = certificateDate;
     }
+    public Certificate( String certificateName, String certificateRank, Date certificateDate) {
+        this.certificateName = certificateName;
+        this.certificateRank = certificateRank;
+        this.certificateDate = certificateDate;
+    }
 
     public int getCertificateID() {
         return certificateID;
