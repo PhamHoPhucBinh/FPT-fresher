@@ -7,13 +7,12 @@ import Assignment.Day2.Model.Experience;
 import Assignment.Day2.Model.Fresher;
 import Assignment.Day2.Model.Intern;
 import Assignment.Day2.Service.CandidateService;
+import Assignment.Day2.Util.CandidateTypeAndBirthDayComparator;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 public class CandidateView {
     public static void showMenu(Scanner scanner, CandidateService candidateService) throws SQLException {
@@ -22,22 +21,36 @@ public class CandidateView {
             System.out.println("1. Add Candidate");
             System.out.println("2. Update Candidate");
             System.out.println("3. Delete Candidate");
-            System.out.println("4. Number of candidates just added");
-            System.out.println("5. Back to Main Menu");
+            System.out.println("4. Show Candidate Sorted");
+            System.out.println("5. Number of candidates just added");
+            System.out.println("6. Back to Main Menu");
             System.out.print("Choose an option: ");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
 
             switch (choice) {
-                case 1 -> addCandidate(scanner, candidateService);
-                case 2 -> updateCandidate(scanner, candidateService);
-                case 3 -> deleteCandidate(scanner, candidateService);
-                case 4 -> CandidateService.displayTotalCandidates();
-                case 5 -> {
+                case 1:
+                    addCandidate(scanner, candidateService);
+                    break;
+                case 2:
+                    updateCandidate(scanner, candidateService);
+                    break;
+                case 3:
+                    deleteCandidate(scanner, candidateService);
+                    break;
+                case 4:
+                    List<Candidate> candidates = candidateService.getAllCandidates();
+                    displaySortedCandidates(candidates);
+                    break;
+                case 5:
+                    CandidateService.displayTotalCandidates();
+                    break;
+                case 6: {
                     return;
                 }
-                default -> System.out.println("Invalid choice. Please try again.");
+                default:
+                    System.out.println("Invalid choice. Please try again.");
             }
         }
     }
@@ -186,12 +199,20 @@ public class CandidateView {
 
         try {
             candidateService.deleteCandidateById(candidateID);
-            System.out.println("Candidate deleted successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error deleting candidate: " + e.getMessage());
         }
     }
+
+    public static void displaySortedCandidates(List<Candidate> candidates) {
+        // Sort the candidates
+        Collections.sort(candidates, new CandidateTypeAndBirthDayComparator());
+        for (Candidate candidate : candidates) {
+            System.out.println(candidate);
+        }
+    }
+
 
     private static Date validateBirthDate(String birthDateString) throws BirthDayException, ParseException {
         Date birthDate = new SimpleDateFormat("dd-MM-yyyy").parse(birthDateString);

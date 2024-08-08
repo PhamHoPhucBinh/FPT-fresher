@@ -1,13 +1,15 @@
 package Assignment.Day2.DAO;
 
 import Assignment.Day2.Model.*;
+import Assignment.Day2.Service.CandidateService;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CandidateDAOImpl implements CandidateDAO {
-
+    private static final Logger logger = Logger.getLogger(CandidateService.class);
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/CandidateManagement";
     private static final String username = "root";
     private static final String password = "12345";
@@ -21,7 +23,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         return DriverManager.getConnection(jdbcURL, username, password);
     }
 
-    // TODO: 8/7/2024 add candidate function
+    // TODO: 8/7/2024 ADD CANDIDATE FUNCTION
     @Override
     public void addCandidate(Candidate candidate) {
         String sql = "SELECT * FROM candidates WHERE 1=0"; // Empty result set
@@ -29,7 +31,7 @@ public class CandidateDAOImpl implements CandidateDAO {
         try (Connection connection = getConnection();
              Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
              ResultSet resultSet = statement.executeQuery(sql)) {
-
+            logger.info("Executing query: " + sql);
             resultSet.moveToInsertRow();
             resultSet.updateString("fullName", candidate.getFullName());
             resultSet.updateDate("birthDay", new java.sql.Date(candidate.getBirthDay().getTime()));
@@ -53,7 +55,7 @@ public class CandidateDAOImpl implements CandidateDAO {
             for (Certificate certificate : candidate.getCertificates()) {
                 insertCertificate(connection, candidateID, certificate);
             }
-
+            logger.info("Candidate added successfully");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -208,7 +210,7 @@ public class CandidateDAOImpl implements CandidateDAO {
                 resultSet.updateInt("candidateType", fresher.getCandidateType());
                 resultSet.updateRow();
 
-                // If candidate type changed, remove old subclass data
+
                 if (currentCandidateType != fresher.getCandidateType()) {
                     deleteOldCandidateSubclassData(connection, fresher.getCandidateID(), currentCandidateType);
                 }
@@ -308,26 +310,37 @@ public class CandidateDAOImpl implements CandidateDAO {
     // TODO: 8/7/2024 DELETE FUNCTION
     @Override
     public void deleteCandidateById(int candidateID) throws SQLException {
+        String checkQuery = "SELECT COUNT(*) FROM candidate_certificates WHERE candidateID = ?";
+        String deleteQuery = "DELETE FROM candidates WHERE candidateID = ?";
+
         try (Connection connection = getConnection()) {
-            String sql = "SELECT candidateType FROM candidates WHERE candidateID = ?";
-            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connection.prepareStatement(checkQuery)) {
                 stmt.setInt(1, candidateID);
                 try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        int candidateType = rs.getInt("candidateType");
-                        deleteOldCandidateSubclassData(connection, candidateID, candidateType);
-                        String deleteCandidateSql = "DELETE FROM candidates WHERE candidateID = ?";
-                        try (PreparedStatement deleteStmt = connection.prepareStatement(deleteCandidateSql)) {
-                            deleteStmt.setInt(1, candidateID);
-                            deleteStmt.executeUpdate();
-                        }
+                    rs.next();
+                    int count = rs.getInt(1);
+
+                    if (count > 0) {
+                        System.out.println("Cannot delete candidate with ID " + candidateID + " because it has associated certificates.");
+                        logger.error("Attempt to delete candidate with ID " + candidateID + " failed due to associated certificates.");
+                        return;
+                    }
+
+                    // No associated certificates, proceed with deletion
+                    try (PreparedStatement deleteStmt = connection.prepareStatement(deleteQuery)) {
+                        deleteStmt.setInt(1, candidateID);
+                        deleteStmt.executeUpdate();
+//                        logger.info("Candidate with ID " + candidateID + " deleted successfully.");
                     }
                 }
             }
+        } catch (SQLException e) {
+            logger.error("Error deleting candidate: " + e.getMessage(), e);
+            throw e;
         }
     }
 
-    // TODO: 8/7/2024 Get all Candidates Function
+    // TODO: 8/7/2024 GET ALL Candidates Function
     @Override
     public List<Candidate> getAllCandidates() {
         List<Candidate> candidates = new ArrayList<>();
@@ -361,6 +374,7 @@ public class CandidateDAOImpl implements CandidateDAO {
 
                 if (candidate != null) {
                     candidates.add(candidate);
+                    logger.info("logger: get List thanh cong");
                 }
             }
         } catch (SQLException e) {
@@ -369,6 +383,7 @@ public class CandidateDAOImpl implements CandidateDAO {
 
         return candidates;
     }
+
     private Experience getExperienceCandidate(Connection connection, int candidateID, String fullName, Date birthDay, String phone, String email, int candidateType) throws SQLException {
         String experienceQuery = "SELECT * FROM experience WHERE candidateID = ?";
         Experience experience = null;

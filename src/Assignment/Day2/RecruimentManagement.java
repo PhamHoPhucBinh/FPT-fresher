@@ -8,8 +8,11 @@ import Assignment.Day2.Service.CandidateService;
 import Assignment.Day2.Service.CertificateService;
 import Assignment.Day2.View.ApplyCertificateView;
 import Assignment.Day2.View.HomeView;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.chainsaw.Main;
 
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 public class RecruimentManagement {
     /*test add and update data
@@ -57,7 +60,11 @@ public class RecruimentManagement {
     }
 
      */
+
+    private static Logger logger = Logger.getLogger(String.valueOf(Main.class));
+
     public static void main(String[] args) {
+        BasicConfigurator.configure();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver"); // Load MySQL JDBC Driver
 
