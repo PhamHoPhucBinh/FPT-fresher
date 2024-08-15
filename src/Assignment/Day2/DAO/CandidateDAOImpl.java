@@ -284,6 +284,88 @@ public class CandidateDAOImpl implements CandidateDAO {
         }
     }
 
+
+    // TODO: 8/7/2024 DELETE FUNCTION
+    @Override
+//    public void deleteCandidateById(int candidateID) throws SQLException {
+//        String checkQuery = "SELECT COUNT(*) FROM candidate_certificates WHERE candidateID = ?";
+//        String deleteQuery = "DELETE FROM candidates WHERE candidateID = ?";
+//
+//        try (Connection connection = getConnection()) {
+//            try (PreparedStatement stmt = connection.prepareStatement(checkQuery)) {
+//                stmt.setInt(1, candidateID);
+//                try (ResultSet rs = stmt.executeQuery()) {
+//                    rs.next();
+//                    int count = rs.getInt(1);
+//
+//                    if (count > 0) {
+//                        System.out.println("Cannot delete candidate with ID " + candidateID + " because it has associated certificates.");
+//                        logger.error("Attempt to delete candidate with ID " + candidateID + " failed due to associated certificates.");
+//                        return;
+//                    }
+//
+//                    // No associated certificates, proceed with deletion
+//                    try (PreparedStatement deleteStmt = connection.prepareStatement(deleteQuery)) {
+//                        deleteStmt.setInt(1, candidateID);
+//                        deleteStmt.executeUpdate();
+////                        logger.info("Candidate with ID " + candidateID + " deleted successfully.");
+//                    }
+//                }
+//            }
+//        } catch (SQLException e) {
+//            logger.error("Error deleting candidate: " + e.getMessage(), e);
+//            throw e;
+//        }
+//    }
+    public void deleteCandidateById(int candidateID) throws SQLException {
+        String checkQuery = "SELECT COUNT(*) FROM candidate_certificates WHERE candidateID = ?";
+        String deleteQuery = "DELETE FROM candidates WHERE candidateID = ?";
+        String candidateTypeQuery = "SELECT candidateType FROM candidates WHERE candidateID = ?";
+
+        try (Connection connection = getConnection()) {
+            // Check if candidate has associated certificates
+            try (PreparedStatement stmt = connection.prepareStatement(checkQuery)) {
+                stmt.setInt(1, candidateID);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    rs.next();
+                    int count = rs.getInt(1);
+
+                    if (count > 0) {
+                        System.out.println("Cannot delete candidate with ID " + candidateID + " because it has associated certificates.");
+                        logger.error("Attempt to delete candidate with ID " + candidateID + " failed due to associated certificates.");
+                        return;
+                    }
+                }
+            }
+
+            // Get the candidate type
+            int candidateType;
+            try (PreparedStatement stmt = connection.prepareStatement(candidateTypeQuery)) {
+                stmt.setInt(1, candidateID);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        candidateType = rs.getInt("candidateType");
+                    } else {
+                        System.out.println("Candidate with ID " + candidateID + " does not exist.");
+                        return;
+                    }
+                }
+            }
+
+            // Delete subclass data
+            deleteOldCandidateSubclassData(connection, candidateID, candidateType);
+
+            // Delete candidate from the main candidates table
+            try (PreparedStatement deleteStmt = connection.prepareStatement(deleteQuery)) {
+                deleteStmt.setInt(1, candidateID);
+                deleteStmt.executeUpdate();
+                logger.info("Candidate with ID " + candidateID + " deleted successfully.");
+            }
+        } catch (SQLException e) {
+            logger.error("Error deleting candidate: " + e.getMessage(), e);
+            throw e;
+        }
+    }
     private void deleteOldCandidateSubclassData(Connection connection, int candidateID, int candidateType) throws SQLException {
         String deleteSql = null;
 
@@ -304,39 +386,6 @@ public class CandidateDAOImpl implements CandidateDAO {
                 deleteStmt.setInt(1, candidateID);
                 deleteStmt.executeUpdate();
             }
-        }
-    }
-
-    // TODO: 8/7/2024 DELETE FUNCTION
-    @Override
-    public void deleteCandidateById(int candidateID) throws SQLException {
-        String checkQuery = "SELECT COUNT(*) FROM candidate_certificates WHERE candidateID = ?";
-        String deleteQuery = "DELETE FROM candidates WHERE candidateID = ?";
-
-        try (Connection connection = getConnection()) {
-            try (PreparedStatement stmt = connection.prepareStatement(checkQuery)) {
-                stmt.setInt(1, candidateID);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    rs.next();
-                    int count = rs.getInt(1);
-
-                    if (count > 0) {
-                        System.out.println("Cannot delete candidate with ID " + candidateID + " because it has associated certificates.");
-                        logger.error("Attempt to delete candidate with ID " + candidateID + " failed due to associated certificates.");
-                        return;
-                    }
-
-                    // No associated certificates, proceed with deletion
-                    try (PreparedStatement deleteStmt = connection.prepareStatement(deleteQuery)) {
-                        deleteStmt.setInt(1, candidateID);
-                        deleteStmt.executeUpdate();
-//                        logger.info("Candidate with ID " + candidateID + " deleted successfully.");
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            logger.error("Error deleting candidate: " + e.getMessage(), e);
-            throw e;
         }
     }
 

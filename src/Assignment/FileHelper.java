@@ -1,5 +1,4 @@
 package Assignment;
-import org.junit.platform.commons.util.StringUtils;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import org.junit.platform.commons.util.StringUtils;
 
 public class FileHelper<E> {
     public void write(String path, List<E> list, boolean isAppend) {
